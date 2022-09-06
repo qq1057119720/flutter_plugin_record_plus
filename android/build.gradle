@@ -1,0 +1,42 @@
+group 'com.record.flutter_plugin_record_plus'
+version '1.0'
+
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:7.2.2'
+    }
+}
+
+rootProject.allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 31
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    defaultConfig {
+        minSdkVersion 16
+    }
+}
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation 'com.github.shaoshuai904:RecordWav:1.0.3'
+    implementation "androidx.appcompat:appcompat:1.0.0"
+//    implementation 'com.github.adrielcafe:AndroidAudioConverter:0.0.8'
+    implementation 'com.arthenica:mobile-ffmpeg-full:4.4'
+}
