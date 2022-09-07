@@ -1,3 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.record.flutter_plugin_record_plus">
+
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 </manifest>

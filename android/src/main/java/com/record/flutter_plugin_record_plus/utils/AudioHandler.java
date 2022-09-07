@@ -9,6 +9,9 @@ import android.os.Message;
 import android.os.Process;
 import android.util.Log;
 
+import com.record.flutter_plugin_record_plus.timer.ITimerChangeCallback;
+import com.record.flutter_plugin_record_plus.timer.TimerUtils;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -20,8 +23,6 @@ import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-import record.wilson.flutter.com.flutter_plugin_record.timer.ITimerChangeCallback;
-import record.wilson.flutter.com.flutter_plugin_record.timer.TimerUtils;
 
 public final class AudioHandler extends Handler {
 
@@ -55,7 +56,9 @@ public final class AudioHandler extends Handler {
     }
 
     public void startRecord(RecordListener listener) {
-        if (isRecording()) stopRecord();
+        if (isRecording()) {
+            stopRecord();
+        }
         Message message = obtainMessage(MESSAGE_START_RECORD);
         message.obj = listener;
         sendMessage(message);
@@ -68,12 +71,16 @@ public final class AudioHandler extends Handler {
 
     public void stopRecord() {
         AudioThread audioThread = mThread.get();
-        if (audioThread != null) audioThread.setPauseRecord();
+        if (audioThread != null) {
+            audioThread.setPauseRecord();
+        }
     }
 
     public void cancelRecord() {
         AudioThread audioThread = mThread.get();
-        if (audioThread != null) audioThread.setCancelRecord();
+        if (audioThread != null) {
+            audioThread.setCancelRecord();
+        }
     }
 
     public boolean isRecording() {
@@ -83,21 +90,30 @@ public final class AudioHandler extends Handler {
 
     public void release() {
         AudioThread audioThread = mThread.get();
-        if (audioThread != null) audioThread.release();
+        if (audioThread != null) {
+            audioThread.release();
+        }
     }
 
     @Override
     public void handleMessage(Message msg) {
         super.handleMessage(msg);
         AudioThread audioThread = mThread.get();
-        if (audioThread == null) return;
+        if (audioThread == null) {
+            return;
+        }
         switch (msg.what) {
             case MESSAGE_START_RECORD:
                 Object obj = msg.obj;
                 RecordListener listener = null;
-                if (obj instanceof RecordListener)
+                if (obj instanceof RecordListener) {
                     listener = (RecordListener) obj;
-                audioThread.startRecord(listener);
+                }
+                try {
+                    audioThread.startRecord(listener);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
             default:
                 break;
@@ -187,7 +203,7 @@ public final class AudioHandler extends Handler {
 
         private volatile boolean isRecording;
 
-        private void startRecord(RecordListener listener) {
+        private void startRecord(RecordListener listener) throws Exception {
 
             audioTime =0;
             TimerUtils.startTimer(tag);
@@ -214,8 +230,9 @@ public final class AudioHandler extends Handler {
             File recordFile = null;
             if (listener != null) {
                 String filePath = listener.getFilePath();
-                if (!filePath.endsWith(".wav"))
+                if (!filePath.endsWith(".wav")) {
                     filePath = filePath + ".wav";
+                }
                 recordFile = new File(filePath);
             }
             try {
@@ -230,7 +247,9 @@ public final class AudioHandler extends Handler {
                 }
                 mRecord.startRecording();
                 isCancel = false;
-                if (listener != null) listener.onStart();
+                if (listener != null) {
+                    listener.onStart();
+                }
                 Log.e(TAG, "start recording");
                 isRecording = true;
 //                Log.d(TAG, "BUFFER LIMIT IS " + buffer.limit() + "\n\t\t\tCAPACITY IS" + buffer.capacity());
@@ -243,7 +262,9 @@ public final class AudioHandler extends Handler {
                                 : read == -2 ? "ERROR_BAD_VALUE"
                                 : read == -1 ? "ERROR"
                                 : String.valueOf(read));
-                        if (listener != null) listener.onError(read);
+                        if (listener != null) {
+                            listener.onError(read);
+                        }
                         break;
                     }
                     if (out != null) {

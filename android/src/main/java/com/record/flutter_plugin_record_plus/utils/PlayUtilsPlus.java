@@ -22,6 +22,7 @@ public class PlayUtilsPlus {
             this.player.setDataSource(filePath);
             this.player.prepareAsync();
             this.player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
                 public void onPrepared(MediaPlayer mp) {
                     PlayUtilsPlus.this.player.start();
                 }
@@ -31,6 +32,7 @@ public class PlayUtilsPlus {
             }
 
             this.player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
                 public void onCompletion(MediaPlayer mp) {
                     PlayUtilsPlus.this.stopPlaying();
                 }
