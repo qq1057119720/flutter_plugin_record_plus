@@ -122,6 +122,7 @@ public class FlutterPluginRecordPlusPlugin implements FlutterPlugin, MethodCallH
     }
 
 
+
     private void start() {
         PackageManager packageManager = activity.getPackageManager();
         boolean permission = PackageManager.PERMISSION_GRANTED == packageManager.checkPermission(Manifest.permission.RECORD_AUDIO, activity.getPackageName());
@@ -195,7 +196,14 @@ public class FlutterPluginRecordPlusPlugin implements FlutterPlugin, MethodCallH
 
     @Override
     public void onVolume(double db) {
-
+        String id = call.argument("id");
+        Map<String, Object> m1 = new HashMap<String, Object>();
+        m1.put("id", id);
+        m1.put("amplitude", db / 100);
+        m1.put("result", "success");
+        activity.runOnUiThread(() -> {
+            channel.invokeMethod("onAmplitude", m1);
+        });
     }
 
     @Override
